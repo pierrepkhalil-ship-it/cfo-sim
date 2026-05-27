@@ -411,6 +411,27 @@
     font-weight: 600;
   }
 
+  .memo-tags {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  /* Color-coded by decision size — subtle */
+  .memo-tag.days-1 {
+    background: rgba(45, 74, 62, 0.1);
+    color: var(--accent);
+  }
+  .memo-tag.days-3 {
+    background: var(--bg-2);
+    color: var(--ink-soft);
+  }
+  .memo-tag.days-5,
+  .memo-tag.days-7 {
+    background: rgba(139, 58, 58, 0.1);
+    color: var(--warn);
+  }
+
   .memo-subject {
     font-family: 'Fraunces', serif;
     font-size: 16px;
@@ -1360,7 +1381,7 @@
 </div>
 
 <div class="day-strip">
-  <span class="day-label" id="day-label">Dag 1 av 160</span>
+  <span class="day-label" id="day-label">Dag 1 av 252</span>
   <div class="day-progress"><div class="day-fill" id="day-fill" style="width: 2.5%"></div></div>
 </div>
 
@@ -1373,11 +1394,11 @@
   <div class="overlay-card">
     <div class="badge">CFO-Simulator</div>
     <h2>Vem är <em>du</em>?</h2>
-    <div class="lede">Skriv ditt namn och välj en avatar. Sedan tar vi fyra kvartal (160 dagar) tillsammans.</div>
+    <div class="lede">Skriv ditt namn och välj en avatar. Sedan tar vi fyra kvartal (~252 arbetsdagar) tillsammans.</div>
 
     <div class="name-field">
       <label for="name-input">Ditt namn</label>
-      <input type="text" id="name-input" placeholder="Förnamn Efternamn" maxlength="40" autocomplete="name" />
+      <input type="text" id="name-input" placeholder="Spelarnamn" maxlength="40" autocomplete="name" />
     </div>
 
     <div class="avatar-section-label">Välj avatar</div>
@@ -1511,8 +1532,8 @@
   // ============================================================
   //  Konfiguration
   // ============================================================
-  const TOTAL_DAYS = 160;
-  const DAYS_PER_QUARTER = 40;
+  const DAYS_PER_QUARTER = 63;       // ungefär antal arbetsdagar per kvartal
+  const TOTAL_DAYS = DAYS_PER_QUARTER * 4;  // 252
   const MAX_INBOX = 4;
   const DAYS_PER_DECISION = 2;
   const NEW_MEMO_EVERY = 1;
@@ -1567,6 +1588,7 @@
     {
       tone: 'board', avatar: 'V', from: 'VD',
       subject: 'Vi behöver prata om prognosen',
+      days: 5,
       body: 'Försäljningen ligger 15% under plan. Styrelsen träffas om två veckor. <em>Hur ramar vi in det?</em>',
       actions: [
         { label: 'Vi sänker prognosen öppet', preview: '−Styrelsen nu, +förtroende senare',
@@ -1580,6 +1602,7 @@
     {
       tone: 'board', avatar: 'V', from: 'VD',
       subject: 'Förvärvskandidat — konkurrent till salu',
+      days: 5,
       body: 'Bedömt pris: <em>3x omsättning</em>. Synergierna är verkliga men det sträcker balansräkningen.',
       actions: [
         { label: 'Kör hårt. Led affären.', preview: 'Djärv satsning',
@@ -1593,6 +1616,7 @@
     {
       tone: 'board', avatar: 'V', from: 'VD',
       subject: 'Jag vill expandera till Tyskland',
+      days: 5,
       body: 'VD är entusiastisk. Marknadsanalysen är tunn. <em>Capex: 6 MSEK på 18 mån.</em>',
       actions: [
         { label: 'Backa planen offentligt', preview: 'VD-allierad',
@@ -1606,6 +1630,7 @@
     {
       tone: 'board', avatar: 'O', from: 'Styrelseordförande',
       subject: 'Konfidentiellt — VD-succession',
+      days: 5,
       body: 'I förtroende: ordföranden funderar på VD-byte. <em>Vill höra din uppfattning.</em>',
       actions: [
         { label: 'Ärlig bedömning av VD:n', preview: 'Förtroende med ordförande',
@@ -1619,6 +1644,7 @@
     {
       tone: 'board', avatar: 'V', from: 'VD',
       subject: 'Bonusprogram för ledningen',
+      days: 3,
       body: 'VD vill införa nytt bonusprogram baserat på EBITDA. <em>Vissa medlemmar i ledningen tycker det är orättvist.</em>',
       actions: [
         { label: 'Förespråka mer balanserade KPI:er', preview: 'Påverka design',
@@ -1632,6 +1658,7 @@
     {
       tone: 'board', avatar: 'L', from: 'Ledamot i styrelsen',
       subject: 'Vill ha djupare KPI-rapport',
+      days: 3,
       body: 'En av ledamöterna vill ha veckovis dashboard. <em>Inte standard, men hen är inflytelserik.</em>',
       actions: [
         { label: 'Bygg en ordentlig dashboard', preview: 'Engagera ledamoten',
@@ -1645,6 +1672,7 @@
     {
       tone: 'board', avatar: 'O', from: 'Styrelseordförande',
       subject: 'Tänker rekrytera in en till ledamot',
+      days: 3,
       body: 'Ordförande vill stärka styrelsen med branscherfarenhet. <em>Frågar om dina synpunkter.</em>',
       actions: [
         { label: 'Föreslå någon från ditt nätverk', preview: 'Aktivt',
@@ -1658,6 +1686,7 @@
     {
       tone: 'board', avatar: 'V', from: 'VD',
       subject: 'Vill skriva LinkedIn-inlägg om kvartalet',
+      days: 3,
       body: 'VD vill att du och hen skriver om "kvartalets lärdomar". <em>Innan rapporten är publik.</em>',
       actions: [
         { label: 'Säg nej — informationsläckage', preview: 'Korrekt',
@@ -1671,6 +1700,7 @@
     {
       tone: 'board', avatar: 'L', from: 'Ledamot',
       subject: 'Vill ha redovisning av "AI-strategin"',
+      days: 5,
       body: 'En styrelseledamot har läst om AI och vill veta vad ni gör. <em>Ni har ingen explicit AI-strategi.</em>',
       actions: [
         { label: 'Sätt ihop ett ärligt minnesanteckning', preview: 'Trovärdigt',
@@ -1684,6 +1714,7 @@
     {
       tone: 'board', avatar: 'V', from: 'VD',
       subject: 'Ny strategisk plan — 3 år',
+      days: 5,
       body: 'VD vill presentera ny treårsplan för styrelsen. <em>Vill ha din finansiella validering.</em>',
       actions: [
         { label: 'Validera ärligt — flagga risker', preview: 'Trovärdigt',
@@ -1697,6 +1728,7 @@
     {
       tone: 'board', avatar: 'O', from: 'Styrelseordförande',
       subject: 'Vill ha ESG-rapportering',
+      days: 5,
       body: 'Ordföranden vill att ESG ska ingå i ordinarie rapportering. <em>Vi har ingen som äger det.</em>',
       actions: [
         { label: 'Ta ansvar själv tillsvidare', preview: 'Bygg det rätt',
@@ -1710,6 +1742,7 @@
     {
       tone: 'board', avatar: 'V', from: 'VD',
       subject: 'Vill ändra organisationsstruktur',
+      days: 5,
       body: 'VD vill slå ihop två affärsområden. <em>Påverkar 4 chefer i ledningen.</em>',
       actions: [
         { label: 'Stöd och led integration', preview: 'Aktivt',
@@ -1723,6 +1756,7 @@
     {
       tone: 'board', avatar: 'L', from: 'Ny ledamot',
       subject: 'Vill ha intro-session med dig',
+      days: 3,
       body: 'En ny styrelseledamot vill ha en grundlig genomgång av ekonomin. <em>2-3 timmar.</em>',
       actions: [
         { label: 'Förbered en pedagogisk djupdykning', preview: 'Bygg relation',
@@ -1738,6 +1772,7 @@
     {
       tone: 'finance', avatar: 'R', from: 'Redovisningschef',
       subject: 'Revisor flaggar intäktsredovisning',
+      days: 5,
       body: 'En treårig deal är bokad i förskott. Revisorn vill omklassa <em>4,2 MSEK</em>.',
       actions: [
         { label: 'Omklassa nu, ta smällen', preview: '−Kassa, +ren revision',
@@ -1751,6 +1786,7 @@
     {
       tone: 'finance', avatar: 'E', from: 'Ekonomichef',
       subject: 'Periodiseringsfel i förra månadsbokslutet',
+      days: 1,
       body: 'Ungefär <em>800 tkr</em> hamnade fel period. Inte materiellt, men irriterande.',
       actions: [
         { label: 'Rätta i innevarande månad', preview: 'Pragmatiskt',
@@ -1764,6 +1800,7 @@
     {
       tone: 'finance', avatar: 'T', from: 'Treasury',
       subject: 'Valutarisk på EUR-fordringar',
+      days: 3,
       body: 'EUR har försvagats 4% den här månaden. Osäkrad exponering ligger på <em>~6,8 MSEK</em>.',
       actions: [
         { label: 'Säkra 75% nu via forwards', preview: 'Lås in förlusten',
@@ -1777,6 +1814,7 @@
     {
       tone: 'finance', avatar: 'F', from: 'FP&A',
       subject: 'Headcount-plan — Engineering vill ha +30',
+      days: 3,
       body: 'CTO har en roadmap som kräver dem. Burn ökar <em>~12%</em>.',
       actions: [
         { label: 'Godkänn alla 30', preview: 'Backa roadmapen',
@@ -1790,6 +1828,7 @@
     {
       tone: 'finance', avatar: 'F', from: 'FP&A-analytiker',
       subject: 'Kundlönsamhet — 20% av kunderna går back',
+      days: 3,
       body: 'En djupanalys visar att en femtedel av kundbasen är olönsam. <em>Vad gör vi?</em>',
       actions: [
         { label: 'Höj priserna för dessa kunder', preview: 'Risk: tappar några',
@@ -1803,6 +1842,7 @@
     {
       tone: 'finance', avatar: 'L', from: 'Likviditetsansvarig',
       subject: 'Var ska vi placera överlikviditeten?',
+      days: 3,
       body: 'Ca 25 MSEK står på sparkonto. <em>Räntan är dålig men säker.</em>',
       actions: [
         { label: 'Spridd kortränteportfölj', preview: 'Balanserat',
@@ -1816,6 +1856,7 @@
     {
       tone: 'finance', avatar: 'R', from: 'Redovisningschef',
       subject: 'Goodwill nedskrivningstest',
+      days: 5,
       body: 'Beräkningarna pekar på <em>~12 MSEK nedskrivning</em> av goodwill från senaste förvärv.',
       actions: [
         { label: 'Skriv ner enligt indikation', preview: 'Försiktighetsprincipen',
@@ -1829,6 +1870,7 @@
     {
       tone: 'finance', avatar: 'B', from: 'Bokföringskonsult',
       subject: 'Ny redovisningsstandard från årsskiftet',
+      days: 3,
       body: 'Påverkar hur leasingavtal rapporteras. <em>Mycket arbete framöver.</em>',
       actions: [
         { label: 'Sätt projektgrupp direkt', preview: 'Proaktivt',
@@ -1840,6 +1882,7 @@
     {
       tone: 'finance', avatar: 'K', from: 'Kreditchefen',
       subject: 'En storkund släpar med betalningarna',
+      days: 3,
       body: 'En kund är 60 dagar försenad på <em>2,4 MSEK</em>. De säger "snart". Tredje gången i år.',
       actions: [
         { label: 'Stoppa leverans tills de betalar', preview: 'Tar konflikten',
@@ -1853,6 +1896,7 @@
     {
       tone: 'finance', avatar: 'F', from: 'FP&A',
       subject: 'Budget för nästa år — första utkast',
+      days: 3,
       body: 'Första utkastet visar 8% omsättningstillväxt och oförändrad EBITDA-marginal. <em>VD vill se 15%.</em>',
       actions: [
         { label: 'Stå fast vid realistisk budget', preview: 'Trovärdighet',
@@ -1866,6 +1910,7 @@
     {
       tone: 'finance', avatar: 'T', from: 'Treasury',
       subject: 'Förslag om ränteswap',
+      days: 3,
       body: 'Lån på rörlig ränta. Föreslår byta till fast genom swap. <em>Ger förutsägbarhet, kostar lite.</em>',
       actions: [
         { label: 'Genomför swappen', preview: 'Förutsägbarhet',
@@ -1879,6 +1924,7 @@
     {
       tone: 'finance', avatar: 'V', from: 'Valutahandlare',
       subject: 'USD-position — möjlighet',
+      days: 3,
       body: 'Spotkursen ser fördelaktig ut. <em>Föreslår tidigarelagd dollar-inköp.</em>',
       actions: [
         { label: 'Köp enligt rekommendation', preview: 'Aktivt',
@@ -1892,6 +1938,7 @@
     {
       tone: 'finance', avatar: 'P', from: 'Projektledare',
       subject: 'IT-projektet ligger 40% över budget',
+      days: 5,
       body: 'ERP-implementationen är försenad och dyrare. <em>Behöver beslut om vi ska fortsätta eller pausa.</em>',
       actions: [
         { label: 'Fortsätt — sunk cost-fallacy?', preview: 'Lika gärna avsluta',
@@ -1905,6 +1952,7 @@
     {
       tone: 'finance', avatar: 'A', from: 'Aktuarie',
       subject: 'Förmånsbaserad pensionsplan — antaganden',
+      days: 3,
       body: 'Aktuariella antaganden bör uppdateras. <em>Påverkar balansräkningen med ~5 MSEK.</em>',
       actions: [
         { label: 'Använd mest realistiska antagandena', preview: 'Korrekt',
@@ -1918,6 +1966,7 @@
     {
       tone: 'finance', avatar: 'R', from: 'Revisorn',
       subject: 'Brist i intern kontroll',
+      days: 5,
       body: 'En lucka i intäktskontrollerna hittades. <em>Måste fixas före årsbokslutet.</em>',
       actions: [
         { label: 'Anlita extern firma', preview: 'Snabbt men dyrt',
@@ -1931,6 +1980,7 @@
     {
       tone: 'finance', avatar: 'C', from: 'Controller',
       subject: 'Månadsbokslut försenat 3 dagar',
+      days: 1,
       body: 'Teamet har inte hunnit klart. <em>Styrelsen väntar siffror.</em>',
       actions: [
         { label: 'Skicka preliminära siffror nu', preview: 'Snabb info',
@@ -1944,6 +1994,7 @@
     {
       tone: 'finance', avatar: 'F', from: 'FP&A',
       subject: 'Vill investera i ny FP&A-mjukvara',
+      days: 5,
       body: 'Anaplan eller Pigment, ~1,5 MSEK i implementation. <em>Skulle korta planeringscykler avsevärt.</em>',
       actions: [
         { label: 'Godkänn investeringen', preview: 'Modernisera',
@@ -1957,6 +2008,7 @@
     {
       tone: 'finance', avatar: 'I', from: 'Internrevisor',
       subject: 'Granskning av leverantörsutbetalningar',
+      days: 3,
       body: 'Internrevisionen vill djupgranska 50 leverantörer. <em>Tar resurser från månadsbokslutet.</em>',
       actions: [
         { label: 'Prioritera granskningen', preview: 'Riskreducering',
@@ -1970,6 +2022,7 @@
     {
       tone: 'finance', avatar: 'T', from: 'Treasury',
       subject: 'Bankerna föreslår sweep-account',
+      days: 3,
       body: 'Automatisk likviditetshantering mellan koncernens konton. <em>Effektiviserar men ökar bankberoende.</em>',
       actions: [
         { label: 'Implementera enligt förslag', preview: 'Effektivt',
@@ -1983,6 +2036,7 @@
     {
       tone: 'finance', avatar: 'K', from: 'Konsolideringsansvarig',
       subject: 'Konsolideringsfel i dotterbolag',
+      days: 3,
       body: 'Ett mindre dotterbolag har redovisat fel intercompany. <em>Måste justeras retroaktivt.</em>',
       actions: [
         { label: 'Rätta i innevarande period', preview: 'Pragmatiskt',
@@ -1998,6 +2052,7 @@
     {
       tone: 'people', avatar: 'S', from: 'Säljchefen',
       subject: 'Toppsäljaren vill ha mer i lön',
+      days: 3,
       body: 'Begär 25% upp. Stod för <em>30% av förra årets ARR</em>. Vill ha svar i veckan.',
       actions: [
         { label: 'Godkänn höjningen', preview: 'Sätter en standard',
@@ -2011,6 +2066,7 @@
     {
       tone: 'people', avatar: 'H', from: 'HR-chefen',
       subject: 'Löneöversynen — vi har 4% i budget',
+      days: 3,
       body: 'Inflationen är 5,5%. Teamet förväntar sig mer. <em>Var landar vi?</em>',
       actions: [
         { label: 'Godkänn 6% rakt över', preview: 'Över inflation',
@@ -2024,6 +2080,7 @@
     {
       tone: 'people', avatar: 'H', from: 'HR-chefen',
       subject: 'Förslag om hybridarbete',
+      days: 3,
       body: 'Teamet vill ha 2 fasta hemdagar i veckan. <em>VD är skeptisk.</em>',
       actions: [
         { label: 'Stöd förslaget mot VD', preview: '+Team, kostar kapital med VD',
@@ -2037,6 +2094,7 @@
     {
       tone: 'people', avatar: 'C', from: 'Controller',
       subject: 'Kvartalsrapport — närmar sig deadline',
+      days: 1,
       body: 'Bokslutet tar längre tid än vanligt. Teamet jobbar övertid. <em>Vill du veta hur det går?</em>',
       actions: [
         { label: 'Be teamet ta en helg ledigt efter', preview: '+Team, +stilen',
@@ -2050,6 +2108,7 @@
     {
       tone: 'people', avatar: 'A', from: 'Analytiker i teamet',
       subject: 'Vill växa till business controller',
+      days: 3,
       body: 'En lovande junior vill ha en utvecklingsplan. <em>Du gillar henne, men det finns ingen öppen tjänst.</em>',
       actions: [
         { label: 'Skapa rollen, ge utmaning', preview: 'Investera i talang',
@@ -2063,6 +2122,7 @@
     {
       tone: 'people', avatar: 'M', from: 'Marknadschefen',
       subject: 'Vill öka marknadsbudgeten med 30%',
+      days: 3,
       body: 'Argumenterar för att konkurrenterna kör hårdare. <em>Pay-back på 6 månader enligt deras case.</em>',
       actions: [
         { label: 'Godkänn fullt', preview: 'Tro på case:t',
@@ -2076,6 +2136,7 @@
     {
       tone: 'people', avatar: 'A', from: 'Assistenten',
       subject: 'Din kalender nästa vecka',
+      days: 1,
       body: 'Du har bokningar 9–18 varje dag. <em>Vill du att jag flyttar något?</em>',
       actions: [
         { label: 'Blockera 2 timmar för djupt arbete', preview: 'Skydda fokustid',
@@ -2089,6 +2150,7 @@
     {
       tone: 'people', avatar: 'C', from: 'CTO',
       subject: 'Behöver ny molnplattform',
+      days: 5,
       body: 'Nuvarande setup blir flaskhals. Migration kostar <em>3 MSEK</em> men sänker drift på sikt.',
       actions: [
         { label: 'Godkänn migrationen', preview: 'Investering i framtid',
@@ -2102,6 +2164,7 @@
     {
       tone: 'people', avatar: 'P', from: 'Praktikanten',
       subject: 'Min handledare hör inte av sig',
+      days: 1,
       body: 'En praktikant vänder sig till dig direkt. <em>Säger sig sitta och tappa lust.</em>',
       actions: [
         { label: 'Ta ett kort möte själv', preview: 'Empatiskt',
@@ -2115,6 +2178,7 @@
     {
       tone: 'people', avatar: 'V', from: 'VD',
       subject: 'Kaffeapparaten är trasig',
+      days: 1,
       body: 'VD skickar mail. <em>Han skämtar. Men inte riktigt.</em>',
       actions: [
         { label: 'Beställ en bättre direkt', preview: 'Småsaker märks',
@@ -2128,6 +2192,7 @@
     {
       tone: 'people', avatar: 'I', from: 'IT-chefen',
       subject: 'Cybersäkerhetsutbildning för alla',
+      days: 3,
       body: 'Vill köra obligatorisk utbildning för all personal. <em>1 timme per medarbetare.</em>',
       actions: [
         { label: 'Godkänn direkt', preview: 'Riskreducering',
@@ -2141,6 +2206,7 @@
     {
       tone: 'people', avatar: 'S', from: 'Säljteamet',
       subject: 'Vill ha kickoff utomlands',
+      days: 3,
       body: 'Säljteamet vill ha sin årliga kickoff i Barcelona. <em>Kostar 400 tkr extra jämfört med Sverige.</em>',
       actions: [
         { label: 'Godkänn — moralen betyder mycket', preview: 'Investera i team',
@@ -2154,6 +2220,7 @@
     {
       tone: 'people', avatar: 'L', from: 'Löneadministratör',
       subject: 'Felaktig löneutbetalning',
+      days: 1,
       body: 'En medarbetare har fått dubbel lön. <em>Hen har inte sagt något.</em>',
       actions: [
         { label: 'Kontakta personen direkt', preview: 'Lös det rakt',
@@ -2167,6 +2234,7 @@
     {
       tone: 'people', avatar: 'O', from: 'Onboarding-ansvarig',
       subject: 'Tre nya börjar nästa måndag',
+      days: 1,
       body: 'En av dem har inte fått laptop ännu. <em>IT säger 2 veckor till.</em>',
       actions: [
         { label: 'Köp ny laptop akut', preview: 'Lös problemet',
@@ -2180,6 +2248,7 @@
     {
       tone: 'people', avatar: 'J', from: 'Junior i teamet',
       subject: 'Vill veta hur det är att vara CFO',
+      days: 1,
       body: 'En junior i ditt team vill ha ett mentormöte. <em>Inte brådskande, bara intresserad.</em>',
       actions: [
         { label: 'Boka en timme nästa vecka', preview: 'Investera i andra',
@@ -2193,6 +2262,7 @@
     {
       tone: 'people', avatar: 'E', from: 'En anställd',
       subject: 'Anonymt klagomål via visselblåsarfunktion',
+      days: 5,
       body: 'Klagomål om "orättvis behandling" i en specifik avdelning. <em>Få detaljer.</em>',
       actions: [
         { label: 'Starta formell utredning direkt', preview: 'Rätt enligt protokoll',
@@ -2206,6 +2276,7 @@
     {
       tone: 'people', avatar: 'H', from: 'HR-chefen',
       subject: 'Ny förälder vill ha förlängd ledighet',
+      days: 3,
       body: 'En medarbetare vill förlänga föräldraledigheten 3 månader. <em>Mitt i ett kritiskt projekt.</em>',
       actions: [
         { label: 'Godkänn och hitta vikarie', preview: 'Empatiskt',
@@ -2219,6 +2290,7 @@
     {
       tone: 'people', avatar: 'T', from: 'Teknikchef',
       subject: 'Två utvecklare har konflikt',
+      days: 3,
       body: 'Det skaver mellan två nyckelpersoner. <em>Resten av teamet märker.</em>',
       actions: [
         { label: 'Medla själv', preview: 'Hands-on ledarskap',
@@ -2232,6 +2304,7 @@
     {
       tone: 'people', avatar: 'S', from: 'Styrelsesekreterare',
       subject: 'Behöver hjälp med protokoll',
+      days: 1,
       body: 'Förra styrelseprotokollet är ofullständigt. <em>Vill stämma av med dig innan utskick.</em>',
       actions: [
         { label: 'Granska noga innan utskick', preview: 'Kvalitet',
@@ -2245,6 +2318,7 @@
     {
       tone: 'people', avatar: 'M', from: 'Mellanchef',
       subject: 'Vill ha mer ansvar',
+      days: 3,
       body: 'En lovande mellanchef känner sig "stuck". <em>Vill ha en tydligare karriärväg.</em>',
       actions: [
         { label: 'Skapa stretch-assignment', preview: 'Behåll talang',
@@ -2258,6 +2332,7 @@
     {
       tone: 'people', avatar: 'A', from: 'Administrationen',
       subject: 'Kontorslokalen är för trång',
+      days: 3,
       body: 'Personalen klagar på trängsel. <em>Att flytta kostar 800 tkr.</em>',
       actions: [
         { label: 'Hyr större lokal', preview: 'Långsiktigt',
@@ -2271,6 +2346,7 @@
     {
       tone: 'people', avatar: 'F', from: 'Förmånsansvarig',
       subject: 'Bredare friskvårdsbidrag',
+      days: 1,
       body: 'Personalen vill att friskvårdsbidraget ska täcka mer. <em>Skatteverkets nya regler tillåter det.</em>',
       actions: [
         { label: 'Höj och utöka direkt', preview: 'Generös arbetsgivare',
@@ -2286,6 +2362,7 @@
     {
       tone: 'external', avatar: 'B', from: 'Banken',
       subject: 'Covenant-genomgång — vi närmar oss',
+      days: 5,
       body: 'Net leverage är på 3,1x. Covenant går vid 3,5x. <em>Ett dåligt kvartal och vi bryter.</em>',
       actions: [
         { label: 'Refinansiera nu till högre ränta', preview: '−Kassaflöde, +andrum',
@@ -2299,6 +2376,7 @@
     {
       tone: 'external', avatar: 'I', from: 'IR-chefen',
       subject: 'Analytikerdag nästa vecka',
+      days: 3,
       body: 'Köpsidan vill ha tillväxt. Säljsidan vill ha marginal. <em>Vad leder vi med?</em>',
       actions: [
         { label: 'Led med marginalexpansion', preview: 'Vinner värdeinvesterare',
@@ -2312,6 +2390,7 @@
     {
       tone: 'external', avatar: 'L', from: 'Storkund',
       subject: 'Vår största kund omförhandlar',
+      days: 5,
       body: 'Står för 15% av intäkterna. Vill ha <em>20% prissänkning</em> eller går till upphandling.',
       actions: [
         { label: 'Håll positionen. Visa värdet.', preview: 'Höga insatser',
@@ -2325,6 +2404,7 @@
     {
       tone: 'external', avatar: 'Ä', from: 'Ägare',
       subject: 'Ägaren vill ha högre utdelning',
+      days: 5,
       body: 'Förslag: höja utdelningen med 40% nästa år. <em>Vår investeringsplan klarar inte det.</em>',
       actions: [
         { label: 'Argumentera emot med siffror', preview: 'Disciplinerat',
@@ -2338,6 +2418,7 @@
     {
       tone: 'external', avatar: 'B', from: 'Banken',
       subject: 'Förslag om ny revolving credit',
+      days: 3,
       body: 'Banken erbjuder utökad checkkredit på 20 MSEK. Avgift: <em>0,3% per år</em> på outnyttjat.',
       actions: [
         { label: 'Acceptera. Bra att ha buffert.', preview: 'Säkerhet',
@@ -2351,6 +2432,7 @@
     {
       tone: 'external', avatar: 'K', from: 'Skatteverket',
       subject: 'Förfrågan om moms på utlandsfaktura',
+      days: 1,
       body: 'En faktura till Tyskland har behandlats fel. <em>Tilläggsskatt: ~150 tkr.</em>',
       actions: [
         { label: 'Betala direkt och städa rutinen', preview: 'Snabbt klart',
@@ -2362,6 +2444,7 @@
     {
       tone: 'external', avatar: 'M', from: 'Media',
       subject: 'Reporter vill prata om branschen',
+      days: 1,
       body: 'En affärsjournalist vill ha en intervju om läget i sektorn. <em>Kan vara bra PR.</em>',
       actions: [
         { label: 'Tacka ja, förberedd med talking points', preview: 'PR-vinst',
@@ -2375,6 +2458,7 @@
     {
       tone: 'external', avatar: 'K', from: 'Konkurrent',
       subject: 'VD från konkurrent ringer',
+      days: 3,
       body: 'Föreslår diskret samtal om "marknadsdynamik". <em>Det luktar prissamarbete.</em>',
       actions: [
         { label: 'Tacka nej och dokumentera', preview: 'Rätt enligt lag',
@@ -2388,6 +2472,7 @@
     {
       tone: 'external', avatar: 'V', from: 'Vänlig kollega på annat bolag',
       subject: 'Headhunting-samtal',
+      days: 1,
       body: 'En rekryterare ringer om en CFO-roll någon annanstans. <em>Bättre paket.</em>',
       actions: [
         { label: 'Tacka, men inte just nu', preview: 'Höflig',
@@ -2401,6 +2486,7 @@
     {
       tone: 'external', avatar: 'L', from: 'Leverantör',
       subject: 'Ber om förskott på 1 MSEK',
+      days: 3,
       body: 'En kritisk leverantör har likviditetsproblem. <em>Om de går omkull blir det dyrt för oss.</em>',
       actions: [
         { label: 'Betala förskott mot säkerhet', preview: 'Strategiskt',
@@ -2414,6 +2500,7 @@
     {
       tone: 'external', avatar: 'I', from: 'Investerare',
       subject: 'Vill ha enskilt möte',
+      days: 3,
       body: 'En större ägare vill ha ett möte utan VD. <em>Lite ovanligt.</em>',
       actions: [
         { label: 'Ta mötet, informera VD efteråt', preview: 'Lyssna in',
@@ -2427,6 +2514,7 @@
     {
       tone: 'external', avatar: 'P', from: 'PE-investerare',
       subject: 'Föreslår "minor recap"',
+      days: 5,
       body: 'En PE-fond föreslår delvis utköp av befintliga ägare. <em>Brännhet fråga internt.</em>',
       actions: [
         { label: 'Presentera neutralt för ägargrupp', preview: 'Professionellt',
@@ -2440,6 +2528,7 @@
     {
       tone: 'external', avatar: 'B', from: 'Banken',
       subject: 'Bankrelationsmöte — kvartalsuppdatering',
+      days: 1,
       body: 'Vanlig kvartalsavstämning med banken. <em>Bra tillfälle för relationsbyggande.</em>',
       actions: [
         { label: 'Förbered ordentlig presentation', preview: 'Bygger förtroende',
@@ -2453,6 +2542,7 @@
     {
       tone: 'external', avatar: 'A', from: 'Analytiker',
       subject: 'Sellside-analytiker vill ha samtal',
+      days: 1,
       body: 'En större bank-analytiker vill ha bakgrundsamtal. <em>Före hens nästa rapport.</em>',
       actions: [
         { label: 'Ta samtalet, håll dig till publik info', preview: 'Standard IR',
@@ -2466,6 +2556,7 @@
     {
       tone: 'external', avatar: 'K', from: 'Kund',
       subject: 'Kund vill ha referenser',
+      days: 1,
       body: 'En potentiell stor kund vill prata med befintliga kunder som referens. <em>Vissa är försiktiga.</em>',
       actions: [
         { label: 'Koppla ihop med våra bästa kunder', preview: 'Stark referens',
@@ -2479,6 +2570,7 @@
     {
       tone: 'external', avatar: 'F', from: 'Finansinspektionen',
       subject: 'Förfrågan om regelverkstolkning',
+      days: 3,
       body: 'FI vill ha klargörande kring en rapporteringspost. <em>Inte allvarligt, men deadline 14 dagar.</em>',
       actions: [
         { label: 'Svara grundligt med juristhjälp', preview: 'Tryggt',
@@ -2492,6 +2584,7 @@
     {
       tone: 'external', avatar: 'P', from: 'Partner',
       subject: 'Strategisk partner vill utöka samarbete',
+      days: 5,
       body: 'En befintlig partner föreslår joint venture. <em>Komplicerat avtalsmässigt.</em>',
       actions: [
         { label: 'Begär omfattande due diligence', preview: 'Disciplinerat',
@@ -2505,6 +2598,7 @@
     {
       tone: 'external', avatar: 'A', from: 'Aktieägare',
       subject: 'Minoritetsägare ifrågasätter beslut',
+      days: 3,
       body: 'Mindre ägare har skrivit kritiskt mail om senaste utdelningspolicyn. <em>Vill ha förklaring.</em>',
       actions: [
         { label: 'Personligt svar med utförlig förklaring', preview: 'Bygg förtroende',
@@ -2520,6 +2614,7 @@
     {
       tone: 'risk', avatar: 'I', from: 'IT-säkerhet',
       subject: 'Säkerhetsincident — kunddata exponerad',
+      days: 5,
       body: 'Upptäckt under natten. <em>Klockan tickar på rapporteringen.</em>',
       actions: [
         { label: 'Rapportera direkt, full transparens', preview: 'Kort smärta, långsiktigt förtroende',
@@ -2531,6 +2626,7 @@
     {
       tone: 'risk', avatar: 'G', from: 'GDPR-ansvarig',
       subject: 'Ny dataskyddsförordning träder i kraft',
+      days: 3,
       body: 'Vissa rutiner behöver uppdateras. <em>Ingen brand, men gärna åtgärdat innan halvårsskiftet.</em>',
       actions: [
         { label: 'Allokera resurser direkt', preview: 'Proaktivt',
@@ -2544,6 +2640,7 @@
     {
       tone: 'risk', avatar: 'J', from: 'Bolagsjurist',
       subject: 'Stämningshot från före detta kund',
+      days: 5,
       body: 'Påstår kontraktsbrott. Skadestånd: <em>1,8 MSEK</em>.',
       actions: [
         { label: 'Förlik snabbt och tyst', preview: 'Undvik publicitet',
@@ -2557,6 +2654,7 @@
     {
       tone: 'risk', avatar: 'F', from: 'Försäkringsmäklare',
       subject: 'Dags att förnya bolagsförsäkringarna',
+      days: 3,
       body: 'Premien har gått upp 35%. <em>Cyber och D&O drar mest.</em>',
       actions: [
         { label: 'Förhandla med tre andra mäklare', preview: 'Klassisk besparing',
@@ -2570,6 +2668,7 @@
     {
       tone: 'risk', avatar: 'I', from: 'Internrevisor',
       subject: 'Misstanke om bedrägeri på inköp',
+      days: 5,
       body: 'En inköpare har flera fakturor från ett bolag där familjemedlem är delägare. <em>Inget bevisat, men mönstret finns.</em>',
       actions: [
         { label: 'Stäng av inköparen i väntan på utredning', preview: 'Rätt enligt boken',
@@ -2583,6 +2682,7 @@
     {
       tone: 'risk', avatar: 'M', from: 'Miljöansvarig',
       subject: 'Hållbarhetsrapportering — CSRD',
+      days: 5,
       body: 'Nya EU-direktivet kräver omfattande hållbarhetsrapportering. <em>Vi måste börja samla data nu.</em>',
       actions: [
         { label: 'Anlita konsult och kör hårt', preview: 'Proaktivt',
@@ -2596,6 +2696,7 @@
     {
       tone: 'risk', avatar: 'B', from: 'Brandsäkerhet',
       subject: 'Brandsyn — anmärkningar',
+      days: 3,
       body: 'Brandinspektion hittade tre anmärkningar i lokalerna. <em>Måste åtgärdas inom 30 dagar.</em>',
       actions: [
         { label: 'Åtgärda allt direkt', preview: 'Korrekt',
@@ -2609,6 +2710,7 @@
     {
       tone: 'risk', avatar: 'J', from: 'Bolagsjurist',
       subject: 'Patenträttsligt brev',
+      days: 1,
       body: 'Ett patenttroll kräver licens för en teknik ni inte ens använder. <em>2 MSEK.</em>',
       actions: [
         { label: 'Avvisa skriftligen, dokumentera', preview: 'Standard',
@@ -2622,6 +2724,7 @@
     {
       tone: 'risk', avatar: 'A', from: 'AML-ansvarig',
       subject: 'Misstänkt transaktion',
+      days: 5,
       body: 'Compliance flaggar en stor inkommande transaktion. <em>Måste rapporteras till Finanspolisen.</em>',
       actions: [
         { label: 'Rapportera direkt', preview: 'Rätt enligt lag',
@@ -2635,6 +2738,7 @@
     {
       tone: 'risk', avatar: 'D', from: 'Dataskyddsombud',
       subject: 'Anställd har begärt utdrag',
+      days: 1,
       body: 'En anställd vill ha utdrag av all data ni har om hen. <em>GDPR ger henne den rätten.</em>',
       actions: [
         { label: 'Sammanställ enligt rutin', preview: 'Korrekt',
@@ -2648,6 +2752,7 @@
     {
       tone: 'risk', avatar: 'I', from: 'IT-säkerhetschef',
       subject: 'Phishing-mail riktade mot ekonomi',
+      days: 3,
       body: 'Riktade attacker mot just ditt team. <em>Två klick har redan rapporterats.</em>',
       actions: [
         { label: 'Akutmöte och utbildning', preview: 'Snabbt agera',
@@ -2661,6 +2766,7 @@
     {
       tone: 'risk', avatar: 'L', from: 'Bolagsjurist',
       subject: 'Tvist om aktieägaravtal',
+      days: 5,
       body: 'Två mindre aktieägare är oeniga om tolkning av avtalet. <em>Hotar bli rättsligt.</em>',
       actions: [
         { label: 'Föreslå medling', preview: 'Dämpa',
@@ -2674,6 +2780,7 @@
     {
       tone: 'risk', avatar: 'A', from: 'Arbetsmiljöombud',
       subject: 'Klagomål om hög arbetsbelastning',
+      days: 5,
       body: 'Skyddsombudet rapporterar att flera anställda är utbrända. <em>Måste agera enligt lag.</em>',
       actions: [
         { label: 'Direkt åtgärdsplan med extern hjälp', preview: 'Korrekt',
@@ -2689,6 +2796,7 @@
     {
       tone: 'finance', avatar: 'P', from: 'Procurement-chef',
       subject: 'Vill sluta nytt ramavtal',
+      days: 3,
       body: 'Förslag om ramavtal för IT-utrustning som sparar 12%. <em>Lock-in i 3 år.</em>',
       actions: [
         { label: 'Godkänn', preview: 'Spara pengar',
@@ -2702,6 +2810,7 @@
     {
       tone: 'finance', avatar: 'P', from: 'Pensionsförvaltare',
       subject: 'Föreslår byte av pensionsplan',
+      days: 3,
       body: 'Ny förvaltare lovar lägre avgifter. <em>Migration är komplex.</em>',
       actions: [
         { label: 'Byt — pengarna betyder något över tid', preview: 'Lönsamt långsiktigt',
@@ -2715,6 +2824,7 @@
     {
       tone: 'people', avatar: 'E', from: 'Engineering-chef',
       subject: 'Behöver kapitalisera dev-kostnader bättre',
+      days: 3,
       body: 'Engineering vill att mer av deras tid kapitaliseras som tillgång. <em>Mer komplicerat men korrektare.</em>',
       actions: [
         { label: 'Bygg ny policy med revisorn', preview: 'Korrekt',
@@ -2728,6 +2838,7 @@
     {
       tone: 'finance', avatar: 'M', from: 'M&A-rådgivare',
       subject: 'Mindre konkurrent vill bli köpt',
+      days: 5,
       body: 'En liten konkurrent erbjuder sig själva för försäljning. <em>Litet team, intressant teknik.</em>',
       actions: [
         { label: 'Inled samtal', preview: 'Utforska',
@@ -2741,6 +2852,7 @@
     {
       tone: 'external', avatar: 'R', from: 'Revisionsbyrå',
       subject: 'Byrån föreslår byte av huvudansvarig',
+      days: 3,
       body: 'Vår partner byter byrå. <em>De föreslår en ny senior partner.</em>',
       actions: [
         { label: 'Intervjua flera kandidater', preview: 'Disciplinerat',
@@ -2754,6 +2866,7 @@
     {
       tone: 'finance', avatar: 'L', from: 'Likviditetsansvarig',
       subject: 'Stor faktura från konsultbolag',
+      days: 5,
       body: 'Faktura på 1,2 MSEK från ett konsultbolag som ingen i ekonomi godkänt. <em>Kommer från en chef.</em>',
       actions: [
         { label: 'Pausa betalning, utred bakgrund', preview: 'Rätt enligt rutin',
@@ -2767,6 +2880,7 @@
     {
       tone: 'people', avatar: 'C', from: 'CMO',
       subject: 'Re-branding-förslag',
+      days: 3,
       body: 'Marknadschefen vill göra en stor re-branding. <em>3 MSEK och 6 månaders projekt.</em>',
       actions: [
         { label: 'Godkänn fullt', preview: 'Backa CMO',
@@ -2780,6 +2894,7 @@
     {
       tone: 'board', avatar: 'V', from: 'VD',
       subject: 'Vill ta in extern interim',
+      days: 3,
       body: 'VD vill ta in en interim-konsult som "rådgivare". <em>500 tkr/mån, ingen tydlig roll.</em>',
       actions: [
         { label: 'Begär tydligt mandat och deliverables', preview: 'Disciplinerat',
@@ -2793,6 +2908,7 @@
     {
       tone: 'finance', avatar: 'P', from: 'Process-ansvarig',
       subject: 'Vill robotisera fakturahantering',
+      days: 3,
       body: 'RPA-lösning skulle frigöra 1,5 tjänst. <em>Implementering 800 tkr.</em>',
       actions: [
         { label: 'Godkänn — effektivitet', preview: 'Modernisering',
@@ -2806,6 +2922,7 @@
     {
       tone: 'external', avatar: 'A', from: 'Advokat',
       subject: 'GD-villkor i nytt kontrakt',
+      days: 3,
       body: 'En större kund vill in skriva in att vi inte får jobba med deras konkurrenter. <em>Begränsar oss.</em>',
       actions: [
         { label: 'Avvisa klausulen', preview: 'Behåll frihet',
@@ -2819,6 +2936,7 @@
     {
       tone: 'people', avatar: 'V', from: 'VD',
       subject: 'Vill skapa "Chief of Staff"-roll',
+      days: 3,
       body: 'VD vill ha en Chief of Staff. <em>Skulle rapportera till VD, men många tycker det är onödig overhead.</em>',
       actions: [
         { label: 'Stöd om CoS får tydligt mandat', preview: 'Villkorat',
@@ -2832,6 +2950,7 @@
     {
       tone: 'risk', avatar: 'K', from: 'Kvalitetschef',
       subject: 'Produktåterkallelse rekommenderas',
+      days: 5,
       body: 'En produktbatch har defekt. <em>Måste återkallas eller risk skadestånd.</em>',
       actions: [
         { label: 'Återkalla direkt, ärligt', preview: 'Rätt sak',
@@ -2845,6 +2964,7 @@
     {
       tone: 'external', avatar: 'M', from: 'Myndighet',
       subject: 'Granskning av tidigare år',
+      days: 5,
       body: 'Skattemyndigheten har frågor om tre år gamla transaktioner. <em>Standardförfrågan, sägs det.</em>',
       actions: [
         { label: 'Engagera skattekonsult', preview: 'Försiktigt',
@@ -2858,6 +2978,7 @@
     {
       tone: 'finance', avatar: 'I', from: 'Investerare',
       subject: 'Vill ha kvartalsuppdatering tidigare',
+      days: 3,
       body: 'En stor ägare vill ha siffror tidigare varje kvartal. <em>Andra ägare får dem samtidigt enligt regelverk.</em>',
       actions: [
         { label: 'Förklara likabehandlingsprincipen', preview: 'Korrekt',
@@ -2871,6 +2992,7 @@
     {
       tone: 'people', avatar: 'T', from: 'Talent Acquisition',
       subject: 'Senior controller-tjänst svår att tillsätta',
+      days: 3,
       body: 'Har varit ute i 4 månader utan rätt kandidat. <em>Lönenivån verkar för låg.</em>',
       actions: [
         { label: 'Höj löneintervallet', preview: 'Lös problemet',
@@ -2884,6 +3006,7 @@
     {
       tone: 'finance', avatar: 'T', from: 'Treasury',
       subject: 'Kassasiffran ser oväntat låg ut',
+      days: 3,
       body: 'En större utbetalning gick ut igår som inte var i prognosen. <em>Misstag eller medvetet?</em>',
       actions: [
         { label: 'Utred omgående', preview: 'Riskhantering',
@@ -2988,6 +3111,7 @@
       from: tpl.from,
       subject: tpl.subject,
       body: tpl.body,
+      days: tpl.days || 3,
       actions: tpl.actions
     };
     state.memos.push(memo);
@@ -3049,11 +3173,16 @@
       renderInbox();
     }
 
-    advanceDays(DAYS_PER_DECISION);
+    // Each memo has its own time cost — small/standard/big decisions
+    const daysCost = memo.days || DAYS_PER_DECISION;
+    advanceDays(daysCost);
 
-    if (decisionsSinceLastMemo >= NEW_MEMO_EVERY) {
+    // Only schedule next memo if game is still running (not paused for quarter report or game over)
+    if (state.running && decisionsSinceLastMemo >= NEW_MEMO_EVERY) {
       decisionsSinceLastMemo = 0;
-      setTimeout(() => addMemo(), 500);
+      setTimeout(() => {
+        if (state.running) addMemo();
+      }, 500);
     }
   }
 
@@ -3197,13 +3326,20 @@
         external: 'Externt', risk: 'Risk'
       }[m.tone] || m.tone;
 
+      // Show time cost: 1 day = quick, 3 days = standard, 5+ days = big decision
+      const days = m.days || 3;
+      const dayLabel = days === 1 ? '1 dag' : days + ' dagar';
+
       memo.innerHTML = `
         <div class="memo-head">
           <div class="memo-from">
             <div class="memo-avatar">${m.avatar}</div>
             <span>${m.from}</span>
           </div>
-          <span class="memo-tag">${toneLabel}</span>
+          <div class="memo-tags">
+            <span class="memo-tag">${toneLabel}</span>
+            <span class="memo-tag days-${days}">${dayLabel}</span>
+          </div>
         </div>
         <div class="memo-subject">${m.subject}</div>
         <div class="memo-body">${m.body}</div>
@@ -3335,6 +3471,7 @@
     state.quarterStartXP = state.xp;
     state.quarterStartDecisions = state.decisions;
     state.running = true;
+    decisionsSinceLastMemo = 0;
 
     // Small refresh — slight bonus to flagging KPIs to keep next quarter playable
     if (state.cash < 40) state.cash = Math.min(60, state.cash + 15);
@@ -3344,6 +3481,13 @@
     document.getElementById('quarter-screen').classList.add('hidden');
     updateHUD();
     renderInbox();
+
+    // Refill inbox to max — new quarter, fresh inflow of memos
+    while (state.memos.length < MAX_INBOX) {
+      const before = state.memos.length;
+      addMemo();
+      if (state.memos.length === before) break;  // no more candidates available
+    }
 
     // Toast for the new quarter
     showToast('Q' + state.quarter + ' startar. Nya utmaningar väntar.', '📅');
@@ -3627,8 +3771,14 @@
   // ============================================================
   //  Wire up — name and avatar
   // ============================================================
-  let playerName = 'Pierre Khalil';
+  let playerName = '';
   let playerAvatar = 1;
+
+  // Generate an anonymous handle like "Anonym CFO #4729"
+  function generateAnonymousName() {
+    const num = Math.floor(1000 + Math.random() * 9000);
+    return 'Anonym CFO #' + num;
+  }
 
   // Avatar picker
   const avatarGrid = document.getElementById('avatar-grid');
@@ -3645,7 +3795,7 @@
   // Name input
   const nameInput = document.getElementById('name-input');
   nameInput.addEventListener('input', (e) => {
-    playerName = e.target.value.trim() || 'CFO';
+    playerName = e.target.value.trim();
   });
   // Allow Enter to start
   nameInput.addEventListener('keydown', (e) => {
@@ -3664,15 +3814,12 @@
   }
 
   function handleStartClick() {
-    // If name input has value, use it; otherwise keep default but require something
     const val = nameInput.value.trim();
-    if (val) playerName = val;
-    if (!playerName || playerName === 'CFO') {
-      // Light nudge — focus the input
-      nameInput.focus();
-      nameInput.style.borderColor = 'var(--warn)';
-      setTimeout(() => nameInput.style.borderColor = '', 1500);
-      return;
+    if (val) {
+      playerName = val;
+    } else {
+      // No name entered — assign an anonymous handle
+      playerName = generateAnonymousName();
     }
     applyPlayerIdentity();
     startGame();
